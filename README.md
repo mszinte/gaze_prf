@@ -10,14 +10,14 @@ Next, we use the same tasks but this time using a bar pass restricted to an aper
 displayed at 3 different position surrounding the fixation target put at the screen center 
 or displaced to the left or to the right.<br/>
 
-## Experiment codes
+## Experiment code
 * 8 participants tested using _experiment_code/main/expLauncher.m_
 
-## Analysis codes
+## Analysis code
 
 ### Behavioral analysis
-* Compute performance results using _analysis_code/behav/behav_results.ipynb_
-
+* Compute and plot performance results using _analysis_code/behav/behav_results.ipynb_
+* Compute and plot eccentricity results using _analysis_code/behav/ecc_results.ipynb_
 
 ### MRI analysis
 
