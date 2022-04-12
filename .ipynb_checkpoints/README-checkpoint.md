@@ -33,5 +33,7 @@ or displaced to the left or to the right.<br/>
 * Arrange data in pp_data folder _analysis_code/preproc/preproc_end.py_<br/>
 * Import in pycortex surfaces and flatmaps using _analysis_code/preproc/pycortex_import.py_<br/>
 
-
+# Post-processing
+* Compute pRF acoss all runs ...
+* Generate pycortex flat map and webgl using __
 
