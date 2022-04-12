@@ -35,5 +35,6 @@ or displaced to the left or to the right.<br/>
 
 # Post-processing
 * Compute pRF acoss all runs ...
-* Generate pycortex flat map and webgl using __
-
+* Generate retinotopy flat maps of FullScreen averaged conditions using _analysis_code/prf/fullscreen_pycortex.ipynb_<br/>
+* Draw ROIS using Inkscape overlay.svg files of each participants
+* Define ROI masks nifti files using _analysis_code/<br/>
