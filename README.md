@@ -34,9 +34,12 @@ or displaced to the left or to the right.<br/>
 * Import in pycortex surfaces and flatmaps using _analysis_code/preproc/pycortex_import.py_<br/>
 
 # Post-processing
-* Compute pRF across all Fullscreen runs and Fullscreen runs averaged by attention condition using _GILLES__ ...
+* Compute pRF across all Fullscreen runs and Fullscreen runs averaged by attention condition using _GILLES_ ...
+* Create pRF threshold maks using _analysis_code/prf/prf_th_masks.ipynb_<br/>
 * Generate Fullscreen retinotopy maps _analysis_code/prf/pycortex.ipynb_<br/>
 * Draw ROIS using Inkscape and Fullscreen maps
-* Define ROI masks nifti files using _analysis_code/prf/roi_masks.ipynb__<br/>
-* Generate all pycortex flatmaps and webgl using _analysis_code/prf/pycortex.ipynb_<br/>
-* Push webgl online using _analysis_code/prf/webgl.ipynb__<br/>
+* Define ROI masks nifti files using _analysis_code/prf/roi_masks.ipynb_<br/>
+* Generate "all" pycortex flatmaps and webgl using _analysis_code/prf/pycortex.ipynb_<br/>
+* Push subjects webgl online using _analysis_code/prf/webgl.ipynb_<br/>
+* Create TSV files of stats comparisons using _analysis_code/prf/make_tsv.ipynb_br/>
+* Draw Fullscreen attention R2 comparison _analysis_code/prf/attcmp_plots.ipynb_br/>
