@@ -16,8 +16,8 @@ or displaced to the left or to the right.<br/>
 ## Analysis code
 
 ### Behavioral analysis
-* Compute and plot performance results using _analysis_code/behav/behav_results.ipynb_
-* Compute and plot eccentricity results using _analysis_code/behav/ecc_results.ipynb_
+* Compute and plot performance results using _analysis_code/behav/behav_results.ipynb_<br/>
+* Compute and plot eccentricity results using _analysis_code/behav/ecc_results.ipynb_<br/>
 
 ### MRI analysis
 
@@ -32,12 +32,13 @@ or displaced to the left or to the right.<br/>
 * Run pybest to z-scores, high pass filter the data using _analysis_code/preproc/pybest_sbatch.py_<br/>
 * Arrange data in pp_data folder _analysis_code/preproc/preproc_end.py_<br/>
 * Import in pycortex surfaces and flatmaps using _analysis_code/preproc/pycortex_import.py_<br/>
+* Average runs togehter _analysis_code/preproc/average_runs.py_<br/>
 
 # Post-processing
-* Compute pRF across all Fullscreen runs and Fullscreen runs averaged by attention condition using _GILLES_ ...
+* Compute pRF across conditions using _GILLES_ ...
 * Create pRF threshold maks using _analysis_code/prf/prf_th_masks.ipynb_<br/>
 * Generate Fullscreen retinotopy maps _analysis_code/prf/pycortex.ipynb_<br/>
-* Draw ROIS using Inkscape and Fullscreen maps
+* Draw ROIS using Inkscape and Fullscreen maps<br/>
 * Define ROI masks nifti files using _analysis_code/prf/roi_masks.ipynb_<br/>
 * Generate "all" pycortex flatmaps and webgl using _analysis_code/prf/pycortex.ipynb_<br/>
 * Push subjects webgl online using _analysis_code/prf/webgl.ipynb_<br/>
