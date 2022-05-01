@@ -41,7 +41,7 @@ frame_tr = 0;
 
 for frame_num = frame_to_draw                      
     frame_tr = frame_tr+1;
-    fprintf(1,'%i,',frame_tr)
+    fprintf(1,'%i-',frame_tr)
     mat_frame = read(v ,frame_num);                
     mat_frame(mat_frame>=5)=255;                   
     mat_frame = mat_frame(:,:,1);
