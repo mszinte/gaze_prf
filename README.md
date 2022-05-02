@@ -43,4 +43,5 @@ or displaced to the left or to the right.<br/>
 * Generate "all" pycortex flatmaps and webgl using _analysis_code/prf/pycortex.ipynb_<br/>
 * Push subjects webgl online using _analysis_code/prf/webgl.ipynb_<br/>
 * Create TSV files of stats comparisons using _analysis_code/prf/make_tsv.ipynb_br/>
-* Draw Fullscreen attention R2 comparison _analysis_code/prf/attcmp_plots.ipynb_br/>
+* Draw Fullscreen attention R2 comparison using _analysis_code/prf/attcmp_plots.ipynb_br/>
+* Draw exemple V1 timeseries and pRF model using _analysis_code/prf/timeseries_plots.ipynb_br/>
