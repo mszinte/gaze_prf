@@ -76,9 +76,9 @@ def main(subject, bids_folder, starting_model='retinotopic',
 
         if starting_model == 'spatiotopic':
             if gaze == 'Left':
-                fs_prf_pars['x'] += 4
+                pars['x'] += 4
             elif gaze == 'Right':
-                fs_prf_pars['x'] -= 4
+                pars['x'] -= 4
 
         return pars
 
