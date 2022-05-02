@@ -9,38 +9,42 @@ import pandas as pd
 import numpy as np
 
 
-
-def main(subject, bids_folder, fullscreen, resize_factor=3):
+def main(subject, bids_folder, starting_model='retinotopic', resize_factor=3):
 
     target_dir = op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}',
                          'func', )
+
+    assert(starting_model in ['retinotopic', 'spatiotopic'])
 
     if not op.exists(target_dir):
         os.makedirs(target_dir)
 
     masker = get_masker(subject, roi='brainmask',
-            bids_folder=bids_folder)
+                        bids_folder=bids_folder)
 
     data = get_data(subject, bids_folder=bids_folder,
-            masker=masker)
+                    fullscreen=False,
+                    masker=masker)
     chunks = data.columns // 50000
-    data.columns = pd.MultiIndex.from_arrays([chunks, data.columns], names=['chunk', 'voxel'])
+    data.columns = pd.MultiIndex.from_arrays(
+        [chunks, data.columns], names=['chunk', 'voxel'])
 
     get_prf_parameters(subject, session=None, gaze='CenterFS', task=None, run=None,
-            fullscreen=True,
-            masker=masker,
-            bids_folder='/tank/shared/2021/visual/pRFgazeMod')
+                       fullscreen=True,
+                       masker=masker,
+                       bids_folder='/tank/shared/2021/visual/pRFgazeMod')
 
     fs_pars = get_prf_parameters(subject, bids_folder=bids_folder)
     fs_pars.index = data.columns
 
     print(fs_pars)
 
-    dm = get_dm(bids_folder=bids_folder, resize_factor=resize_factor)
-    grid_coordinates = get_grid_coordinates(bids_folder=bids_folder, resize_factor=resize_factor)
+    dm = get_dm(bids_folder=bids_folder, resize_factor=resize_factor,
+                task='GazeCenter')
+    grid_coordinates = get_grid_coordinates(
+        bids_folder=bids_folder, resize_factor=resize_factor)
     paradigm = dm.reshape((len(dm), -1))
     hrf_model = SPMHRFModel(1.317025)
-
 
     def fit_prf(d, init_pars):
 
@@ -51,7 +55,8 @@ def main(subject, bids_folder, fullscreen, resize_factor=3):
 
         pars = optimizer.refine_baseline_and_amplitude(init_pars)
         pars = optimizer.fit(init_pars=pars, learning_rate=1e-3, max_n_iterations=10000,
-                r2_atol=0.0001)
+                fixed_pars=['y'],
+                             r2_atol=0.0001)
 
         pars = optimizer.refine_baseline_and_amplitude(pars)
         pred = model.predict(parameters=pars)
@@ -66,36 +71,47 @@ def main(subject, bids_folder, fullscreen, resize_factor=3):
 
         return pars.T
 
+    def get_init_pars(ix, starting_model, gaze):
 
-    data = data.groupby(['task', 'time']).mean()
+        pars = fs_pars.loc[ix].copy()
 
-    for task, d in data.groupby(['task']):
-        print(task, d)
+        if starting_model == 'spatiotopic':
+            if gaze == 'Left':
+                fs_prf_pars['x'] += 4
+            elif gaze == 'Right':
+                fs_prf_pars['x'] -= 4
+
+        return pars
+
+    data = data.groupby(['task', 'gaze', 'time']).mean()
+
+    for (task, gaze), d in data.groupby(['task', 'gaze']):
+        print(task, gaze, d)
 
         pars = []
 
         for chunk, d_ in d.groupby('chunk', 1):
             print(f"Working on task {task} chunk {chunk}")
+            init_pars = get_init_pars(d_.columns, starting_model, gaze)
             pars.append(fit_prf(d_, fs_pars.loc[d_.columns]))
-        
 
         pars = pd.concat(pars, 1).T
         print(pars.describe())
 
         for parameter in ['x', 'y', 'sd', 'amplitude', 'baseline', 'ecc', 'theta', 'r2']:
             masker.inverse_transform(pars[parameter]).to_filename(op.join(target_dir,
-                f'sub-{subject}_task-{task}_roi-{roi}_desc-gaussprf.{parameter}_parameters.nii.gz'))
+                                                                          f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.{starting_model}.{parameter}_parameters.nii.gz'))
 
-    
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('subject', default=None)
-    parser.add_argument('--fullscreen', action='store_true')
+    parser.add_argument('starting_model')
+    # parser.add_argument('starting_model')
 
     parser.add_argument(
         '--bids_folder', default='/tank/shared/2021/visual/pRFgazeMod/')
 
     args = parser.parse_args()
 
-    main(args.subject, bids_folder=args.bids_folder, fullscreen=args.fullscreen)
+    main(args.subject, starting_model=args.starting_model, bids_folder=args.bids_folder)
