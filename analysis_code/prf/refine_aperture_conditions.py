@@ -104,7 +104,7 @@ def main(subject, bids_folder, starting_model='retinotopic',
 
         for parameter in ['x', 'y', 'sd', 'amplitude', 'baseline', 'ecc', 'theta', 'r2']:
             masker.inverse_transform(pars[parameter]).to_filename(op.join(target_dir,
-                                                                          f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.{starting_model}.{parameter}_parameters.nii.gz'))
+                                                                          f'sub-{subject}_task-{task}Gaze{gaze}_desc-gaussprf.startwith-{starting_model}.{parameter}_parameters.nii.gz'))
 
 
 if __name__ == '__main__':
