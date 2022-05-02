@@ -33,11 +33,6 @@ def main(subject, bids_folder, starting_model='retinotopic',
     data.columns = pd.MultiIndex.from_arrays(
         [chunks, data.columns], names=['chunk', 'voxel'])
 
-    get_prf_parameters(subject, session=None, gaze='CenterFS', task=None, run=None,
-                       fullscreen=True,
-                       masker=masker,
-                       bids_folder='/tank/shared/2021/visual/pRFgazeMod')
-
     fs_pars = get_prf_parameters(subject, bids_folder=bids_folder)
     fs_pars.index = data.columns
 
