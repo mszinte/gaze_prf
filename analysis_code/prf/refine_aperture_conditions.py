@@ -4,12 +4,14 @@ import os
 from braincoder.models import GaussianPRF2DWithHRF
 from braincoder.hrf import CustomHRFModel, SPMHRFModel
 from braincoder.optimize import ParameterFitter
+from braincoder.utils import get_rsq
 from gaze_prf.utils.data import get_data, get_prf_parameters, get_dm, get_grid_coordinates, get_masker
 import pandas as pd
 import numpy as np
 
 
-def main(subject, bids_folder, starting_model='retinotopic', resize_factor=3):
+def main(subject, bids_folder, starting_model='retinotopic',
+        task=None, gaze=None, resize_factor=3):
 
     target_dir = op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}',
                          'func', )
@@ -24,6 +26,8 @@ def main(subject, bids_folder, starting_model='retinotopic', resize_factor=3):
 
     data = get_data(subject, bids_folder=bids_folder,
                     fullscreen=False,
+                    task=task,
+                    gaze=gaze,
                     masker=masker)
     chunks = data.columns // 50000
     data.columns = pd.MultiIndex.from_arrays(
@@ -107,11 +111,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('subject', default=None)
     parser.add_argument('starting_model')
-    # parser.add_argument('starting_model')
+    parser.add_argument('--gaze', default=None)
+    parser.add_argument('--task', default=None)
 
     parser.add_argument(
         '--bids_folder', default='/tank/shared/2021/visual/pRFgazeMod/')
 
     args = parser.parse_args()
 
-    main(args.subject, starting_model=args.starting_model, bids_folder=args.bids_folder)
+    main(args.subject, starting_model=args.starting_model, bids_folder=args.bids_folder, gaze=args.gaze, task=args.task)
