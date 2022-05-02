@@ -5,7 +5,8 @@ from braincoder.models import GaussianPRF2DWithHRF
 from braincoder.hrf import CustomHRFModel, SPMHRFModel
 from braincoder.optimize import ParameterFitter
 from braincoder.utils import get_rsq
-from gaze_prf.utils.data import get_data, get_prf_parameters, get_dm, get_grid_coordinates, get_masker
+from gaze_prf.utils.data import get_data, get_prf_parameters, get_dm, get_grid_coordinates, get_masker , get_all_roi_labels
+
 import pandas as pd
 import numpy as np
 
@@ -97,10 +98,20 @@ def main(subject, bids_folder, starting_model='retinotopic',
         pars = pd.concat(pars, 1).T
         print(pars.describe())
 
+        pars_im = masker.inverse_transform(pars.T)
+
         for parameter in ['x', 'y', 'sd', 'amplitude', 'baseline', 'ecc', 'theta', 'r2']:
             masker.inverse_transform(pars[parameter]).to_filename(op.join(target_dir,
                                                                           f'sub-{subject}_task-{task}Gaze{gaze}_desc-gaussprf.startwith-{starting_model}.{parameter}_parameters.nii.gz'))
 
+        pars_im = masker.inverse_transform(pars.T)
+
+        for roi in get_all_roi_labels():
+            roi_masker = get_masker(subject, roi, bids_folder, 'both')
+            p = roi_masker.fit_transform(pars_im)
+            p = pd.DataFrame(p.T, columns=pars.columns)
+            p.index.name = 'voxel'
+            p.to_csv(op.join(target_dir,f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.startwith-{starting_model}_parameters.tsv'))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
