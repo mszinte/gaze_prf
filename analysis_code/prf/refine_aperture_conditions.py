@@ -33,27 +33,34 @@ def main(subject, bids_folder, starting_model='retinotopic',
             mask_retinotopic = image.math_img('r2_retinotopic >= r2_spatiotopic', r2_retinotopic=r2_retinotopic,
                                               r2_spatiotopic=r2_spatiotopic)
 
-            for parameter in ['x', 'y', 'sd', 'amplitude', 'baseline', 'ecc', 'theta', 'r2']:
+            parameter_labels = ['x', 'y', 'sd', 'amplitude', 'baseline', 'ecc', 'theta', 'r2']
+            parameter_images = []
+
+            for parameter_label in parameter_labels:
                 par_retinotopic = op.join(target_dir,
-                                          f'sub-{subject}_task-{task}Gaze{gaze}_desc-gaussprf.startwith-retinotopic.{parameter}_parameters.nii.gz')
+                                          f'sub-{subject}_task-{task}Gaze{gaze}_desc-gaussprf.startwith-retinotopic.{parameter_label}_parameters.nii.gz')
                 par_spatiotopic = op.join(target_dir,
-                                          f'sub-{subject}_task-{task}Gaze{gaze}_desc-gaussprf.startwith-spatiotopic.{parameter}_parameters.nii.gz')
+                                          f'sub-{subject}_task-{task}Gaze{gaze}_desc-gaussprf.startwith-spatiotopic.{parameter_label}_parameters.nii.gz')
 
                 par_combined = image.math_img('np.where(mask_retinotopic, par_retinotopic, par_spatiotopic)',
                         par_retinotopic=par_retinotopic,
                         par_spatiotopic=par_spatiotopic,
                         mask_retinotopic=mask_retinotopic)
 
-                new_fn = op.join(target_dir, f'sub-{subject}_task-{task}Gaze{gaze}_desc-gaussprf.optim.{parameter}_parameters.nii.gz')
+                parameter_images.append(par_combined)
+
+                new_fn = op.join(target_dir, f'sub-{subject}_task-{task}Gaze{gaze}_desc-gaussprf.optim.{parameter_label}_parameters.nii.gz')
                 par_combined.to_filename(new_fn)
 
-        for roi in get_all_roi_labels():
-            roi_masker = get_masker(subject, roi, bids_folder, 'both')
-            p = roi_masker.fit_transform(pars_im)
-            p = pd.DataFrame(p.T, columns=pars.columns)
-            p.index.name = 'voxel'
-            p.to_csv(op.join(
-                target_dir, f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.startwith-{starting_model}_parameters.tsv'))
+            pars_im = image.concat_imgs(parameter_images)
+
+            for roi in get_all_roi_labels():
+                roi_masker = get_masker(subject, roi, bids_folder, 'both')
+                p = roi_masker.fit_transform(pars_im)
+                p = pd.DataFrame(p.T, columns=parameter_labels)
+                p.index.name = 'voxel'
+                p.to_csv(op.join(
+                    target_dir, f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.optim_parameters.tsv'))
     else:
         if not op.exists(target_dir):
             os.makedirs(target_dir)
