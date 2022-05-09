@@ -151,6 +151,7 @@ def get_data(subject=None, session=None, gaze=None, task=None, run=None,
 def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
                        masker=None,
                        roi=None,
+                       filter=False,
                        bids_folder='/tank/shared/2021/visual/pRFgazeMod'):
 
     parameters = ['x', 'y', 'sd', 'baseline', 'amplitude', 'r2']
@@ -173,9 +174,9 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
                 fs_pars.append(pd.DataFrame(
                     {parameter: p}, index=np.arange(len(p))))
 
-            return pd.concat(fs_pars, axis=1)
+            pars = pd.concat(fs_pars, axis=1)
         else:
-            return pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits.mean', f'sub-{subject}', 'func',
+            pars = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits.mean', f'sub-{subject}', 'func',
                                        f'sub-{subject}_roi-{roi}_desc-gaussprf.fit_parameters.tsv'), sep='\t', index_col=0)
 
     elif (session is None) and (gaze is None) and (task is not None) and (run is None):
@@ -189,10 +190,10 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
                 pars.append(pd.DataFrame(
                     {parameter: p}, index=np.arange(len(p))))
 
-            return pd.concat(pars, axis=1)
+            pars = pd.concat(pars, axis=1)
 
         else:
-            return pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
+            pars = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
                                        f'sub-{subject}_task-{task}_roi-{roi}_desc-gaussprf.fit_parameters.tsv'), sep='\t', index_col=0)
 
     elif (session is None) and (gaze is not None) and (task is not None) and (run is None):
@@ -206,14 +207,19 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
                 pars.append(pd.DataFrame(
                     {parameter: p}, index=np.arange(len(p))))
 
-            return pd.concat(pars, axis=1)
+            pars = pd.concat(pars, axis=1)
 
         else:
-            return pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
+            pars = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
                                        f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.fit_parameters.tsv'), sep='\t', index_col=0)
 
     else:
         raise NotImplementedError()
+
+    if filter:
+        return filter_pars(pars)
+    else:
+        return pars
 
 
 def get_prf_model(subject, session=None, gaze=None, task=None, run=None,
@@ -229,7 +235,8 @@ def get_prf_model(subject, session=None, gaze=None, task=None, run=None,
     paradigm = dm.reshape((len(dm), -1))
     hrf_model = SPMHRFModel(1.317025)
 
-    prf_pars = get_prf_parameters(subject, session, gaze, task, run, masker, roi, bids_folder)
+    prf_pars = get_prf_parameters(subject=subject, session=session, gaze=gaze, task=task, run=run, masker=masker,
+                                  roi=roi, bids_folder=bids_folder)
 
     model = GaussianPRF2DWithHRF(
         grid_coordinates, paradigm, hrf_model=hrf_model,
@@ -302,3 +309,105 @@ def get_all_roi_labels():
             'sIPS',
             'sPCS',
             'VO']
+
+
+def filter_pars(pars):
+    # Threshold values
+    amp_th = 0
+    r2_th = [0, 1]
+    ecc_th = [0.05, 15]
+    sd_th = [0.05, 15]
+
+    pars.loc[pars.amplitude < amp_th] = np.nan
+    pars.loc[(pars.r2 < r2_th[0]) | (pars.r2 > r2_th[1])] = np.nan
+    pars.loc[(pars.ecc < ecc_th[0]) | (pars.ecc > ecc_th[1])] = np.nan
+    pars.loc[(pars.sd < sd_th[0]) | (pars.sd > sd_th[1])] = np.nan
+
+    return pars
+
+
+def get_fixation_screen(bids_folder='/tank/shared/2021/visual/pRFgazeMod', resize_factor=1., max_intensity=255.):
+    x, y = grid_coordinates = get_grid_coordinates(
+        bids_folder=bids_folder, resize_factor=1., flattened=False)
+    fix_screen = (np.sqrt(x**2 + y**2) < .4) * max_intensity
+    fix_screen = ndimage.zoom(fix_screen, 1./resize_factor)
+
+    return fix_screen
+
+
+def get_dm_parameters(bids_folder='/tank/shared/2021/visual/pRFgazeMod', include_xy=True,
+                      task='FS'):
+    dm = get_dm(bids_folder=bids_folder)
+    width_degrees = np.arctan(69/2. / 220) / (2*np.pi) * 360 * 2
+    height_degrees = dm.shape[2] / dm.shape[1] * width_degrees
+
+    # Things were mirrored
+    # width_degrees, height_degrees = height_degrees, width_degrees
+
+    if task == 'FS':
+        radius_wide = np.linspace(-width_degrees / 2.,
+                                  width_degrees / 2, 32, endpoint=True)
+        radius_height = np.linspace(-height_degrees / 2.,
+                                    height_degrees / 2, 18, endpoint=True)[::-1]
+
+        parameters = pd.DataFrame(np.ones((150, 3)) * np.nan, columns=[
+            'angle', 'radius', 'width'])
+    elif task == 'aperture':
+        radius_wide = np.linspace(-width_degrees / 4.,
+                                  width_degrees / 4, 18, endpoint=True)
+        parameters = pd.DataFrame(np.ones((122, 3)) * np.nan, columns=[
+            'angle', 'radius', 'width'])
+
+        parameters['height'] = pd.read_csv(op.join(bids_folder, 'pp_data', 'visual_dm', 'bar_height.tsv'), sep='\t',
+                                           index_col=0)
+
+    parameters.index.name = 'frame'
+    parameters.columns.name = 'parameter'
+
+    bar_width = 19 / 240 * width_degrees
+
+    if task == 'FS':
+        parameters.loc[10:41, 'width'] = bar_width
+        parameters.loc[10:41, 'radius'] = radius_wide[::-1]
+        parameters.loc[10:41, 'angle'] = 0.0
+
+        parameters.loc[52:69, 'width'] = bar_width
+        parameters.loc[52:69, 'radius'] = radius_height
+        parameters.loc[52:69, 'angle'] = .5 * np.pi
+
+        parameters.loc[80:111, 'width'] = bar_width
+        parameters.loc[80:111, 'radius'] = radius_wide
+        parameters.loc[80:111, 'angle'] = 0.0
+
+        parameters.loc[122:139, 'width'] = bar_width
+        parameters.loc[122:139, 'radius'] = radius_height[::-1]
+        parameters.loc[122:139, 'angle'] = .5 * np.pi
+    elif task == 'aperture':
+        parameters.loc[10:27, 'width'] = bar_width
+        parameters.loc[10:27, 'radius'] = radius_wide[::-1]
+        parameters.loc[10:27, 'angle'] = 0.0
+
+        parameters.loc[38:55, 'width'] = bar_width
+        parameters.loc[38:55, 'radius'] = radius_wide
+        parameters.loc[38:55, 'angle'] = 0.0
+
+        parameters.loc[66:83, 'width'] = bar_width
+        parameters.loc[66:83, 'radius'] = radius_wide[::-1]
+        parameters.loc[66:83, 'angle'] = 0.0
+
+        parameters.loc[94:111, 'width'] = bar_width
+        parameters.loc[94:111, 'radius'] = radius_wide
+        parameters.loc[94:111, 'angle'] = 0.0
+
+    if include_xy:
+        parameters['x'] = np.cos(parameters['angle']) * parameters['radius']
+
+        if task == 'FS':
+            parameters['y'] = np.sin(
+                parameters['angle']) * parameters['radius']
+            parameters.at[parameters['y'].abs() < 1e-3, 'y'] = 0.0
+
+        parameters['ecc'] = parameters['radius'].abs()
+        parameters.at[parameters['x'].abs() < 1e-3, 'x'] = 0.0
+
+    return parameters
