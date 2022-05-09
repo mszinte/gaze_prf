@@ -35,8 +35,8 @@ def main(subject, session, task, gaze, n_voxels=250, resize_factor=3., roi='V1',
 
     n_voxels = len(mask)
 
-    masker = get_masker(subject=subject, roi=roi)
-    fs_data = get_data(subject=subject, task=task, masker=masker)
+    masker = get_masker(subject=subject, roi=roi, bids_folder=bids_folder)
+    fs_data = get_data(subject=subject, task=task, masker=masker, bids_folder=bids_folder)
     fs_data = fs_data.loc[:, mask]
     print(fs_data)
 
