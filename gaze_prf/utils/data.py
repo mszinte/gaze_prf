@@ -117,9 +117,10 @@ def parse_sets(session, gaze, task, run,
 
 
 def get_data(subject=None, session=None, gaze=None, task=None, run=None,
-             fullscreen=True,
              bids_folder='/tank/shared/2021/visual/pRFgazeMod',
              masker=None):
+
+    fullscreen = (gaze is None)
 
     if masker is None:
         mask = get_brain_mask(subject, bids_folder)
