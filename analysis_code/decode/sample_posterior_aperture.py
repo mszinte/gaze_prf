@@ -28,7 +28,7 @@ def main(subject, session, task, gaze, n_voxels=250, resize_factor=3., roi='V1',
     fs_pars = fs_pars.loc[~fs_pars.isnull().any(1)]
     mask = fs_pars['r2'].sort_values(ascending=False).index[:n_voxels]
     fs_pars = fs_pars.loc[mask].astype(np.float32)
-    fs_pars['amplitude'] /= resize_factor**2
+    # fs_pars['amplitude'] /= resize_factor**2
 
     if n_voxels > len(mask):
         print(f'ATTENTION: asked for {n_voxels}, but only {len(mask)} adhere to criteria')
@@ -41,6 +41,7 @@ def main(subject, session, task, gaze, n_voxels=250, resize_factor=3., roi='V1',
     print(fs_data)
 
     dm = get_dm(bids_folder=bids_folder, resize_factor=resize_factor)
+    dm /= resize_factor**2
     grid_coordinates = get_grid_coordinates(bids_folder=bids_folder, resize_factor=resize_factor)
     paradigm = dm.reshape((len(dm), -1))
     hrf_model = SPMHRFModel(1.317025)
