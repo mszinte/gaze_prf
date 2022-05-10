@@ -40,33 +40,3 @@ for ix, (subject, task, gaze, starting_model) in enumerate(product(subjects, tas
         print(cmd)
 
     os.system("sbatch %s" %job_file)
-
-
-# tasks = ['AttendFixGazeCenter', 'AttendStimGazeCenter']
-# runs = [1]
-# sessions = ['01', '02']
-# starting_models = [1]
-
-# for ix, (subject, roi, task, run, session, starting_model) in enumerate(product(subjects, rois, tasks, runs, sessions, starting_models)):
-    # print(f'*** RUNNING {subject}, {roi}, {task}, {run}, {session}, {starting_model} ')
-
-    # job_file = os.path.join(job_directory, f"{ix}.job")
-    
-    # now = datetime.now()
-    # time_str = now.strftime("%Y.%m.%d_%H.%M.%S")
-
-    # with open(job_file, 'w') as fh:
-        # fh.writelines("#!/bin/sh\n")
-        # id = f'{subject}.{session}.{roi.replace("+", "")}.{task}.{run}.{session}.{starting_model}.{ix}'
-        # fh.writelines(f"#SBATCH --job-name=fit_aperture_prf.{id}.job\n")
-        # fh.writelines(f"#SBATCH --output={os.environ['HOME']}/.out/fit_aperture_prf.{id}.out\n")
-        # fh.writelines(f"#SBATCH --error={os.environ['HOME']}/.out/fit_aperture_prfs.{id}.err\n")
-        # fh.writelines("#SBATCH --partition=gpu_shared --gpus-per-node=1\n")
-        # fh.writelines("#SBATCH --time=60:00\n")
-        # fh.writelines('source $HOME/.bash_profile\n')
-        # fh.writelines("conda activate tf-gpu\n")
-        # cmd = f"python $HOME/git/decode2/scripts/martin/fit_aperture_prf.py {subject} {session} {task} {run} --mask {roi} --sourcedata $HOME/data/ds-prf --starting_model {starting_model}\n"
-        # fh.writelines(cmd)
-        # print(cmd)
-
-    # os.system("sbatch %s" %job_file)
