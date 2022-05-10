@@ -61,7 +61,7 @@ def main(subject, session, task, gaze, n_voxels=250, resize_factor=3., roi='V1',
     omega, dof = resfitter.fit(method='t', max_n_iterations=10000, init_dof=36., init_sigma2=7., init_rho=1e-3)
 
     test_data = get_data(subject=subject, session=session, task=task, run=1, gaze=gaze, masker=masker, bids_folder=bids_folder)
-    test_data = test_data.loc[:, mask]
+    test_data = test_data.loc[:, mask].reset_index(['session', 'session', 'task', 'run'], drop=True)
     print('test_data', test_data)
 
     baseline_image = get_fixation_screen(bids_folder=bids_folder, resize_factor=resize_factor)
