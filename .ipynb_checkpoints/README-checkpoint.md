@@ -36,7 +36,7 @@ or displaced to the left or to the right.<br/>
 
 # Post-processing
 * Compute pRF across conditions using _GILLES_ ...
-* Create pRF threshold maks using _analysis_code/prf/prf_th_masks.ipynb_<br/>
+* Create pRF threshold mask using _analysis_code/prf/prf_th_masks.ipynb_<br/>
 * Generate Fullscreen retinotopy maps _analysis_code/prf/pycortex.ipynb_<br/>
 * Draw ROIS using Inkscape and Fullscreen maps<br/>
 * Define ROI masks nifti files using _analysis_code/prf/roi_masks.ipynb_<br/>
