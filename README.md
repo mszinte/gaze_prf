@@ -42,6 +42,8 @@ or displaced to the left or to the right.<br/>
 * Define ROI masks nifti files using _analysis_code/prf/roi_masks.ipynb_<br/>
 * Generate "all" pycortex flatmaps and webgl using _analysis_code/prf/pycortex.ipynb_<br/>
 * Push subjects webgl online using _analysis_code/prf/webgl.ipynb_<br/>
-* Create TSV files of stats comparisons using _analysis_code/prf/make_tsv.ipynb_br/>
-* Draw Fullscreen attention R2 comparison using _analysis_code/prf/attcmp_plots.ipynb_br/>
-* Draw exemple V1 timeseries and pRF model using _analysis_code/prf/timeseries_plots.ipynb_br/>
+* Create TSV files of stats comparisons using _analysis_code/prf/make_tsv.ipynb_<br/>
+* Compute pickle files with all timeseries/predictions of out of set analysis _analysis_code/prf/make_tsv.ipynb_<br/>
+* Draw Fullscreen attention R2 comparison using _analysis_code/prf/attcmp_plots.ipynb_<br/>
+* Draw exemple V1 timeseries and pRF model using _analysis_code/prf/timeseries_plots.ipynb_<br/>
+* Compute out of set r2 change using _analysis_code/prf/fs_fit_cmp_plots.ipynb_<br/>
