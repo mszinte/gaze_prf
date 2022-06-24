@@ -362,7 +362,7 @@ def get_dm_parameters(bids_folder='/tank/shared/2021/visual/pRFgazeMod', include
         parameters['height'] = pd.read_csv(op.join(bids_folder, 'pp_data', 'visual_dm', 'bar_height.tsv'), sep='\t',
                                            index_col=0)
 
-    parameters.index.name = 'frame'
+    parameters.index.name = 'time'
     parameters.columns.name = 'parameter'
 
     bar_width = 19 / 240 * width_degrees
@@ -412,3 +412,20 @@ def get_dm_parameters(bids_folder='/tank/shared/2021/visual/pRFgazeMod', include
         parameters.at[parameters['x'].abs() < 1e-3, 'x'] = 0.0
 
     return parameters
+
+
+def get_all_roi_labels():
+    return ['V1',
+            'V2',
+            'V3',
+            'V3AB',
+            'hMT+',
+            'iIPS',
+            'iPCS',
+            'LO',
+            'mPCS',
+            'sIPS',
+            'sPCS',
+            'VO']
+
+
