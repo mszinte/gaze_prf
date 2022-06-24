@@ -20,14 +20,14 @@ def get_mcmc_summary(barpars, n_burnin, task='FS', dropna=True):
         barpars = get_angle_radius_from_xy(barpars)
 
     barpars.columns.name = 'parameter'
-    barpars = barpars.set_index(['frame', 'chain', 'sample']).sort_index().stack('parameter').to_frame('value')
+    barpars = barpars.set_index(['time', 'chain', 'sample']).sort_index().stack('parameter').to_frame('value')
 
-    rhat = barpars.unstack('chain').groupby(['frame', 'parameter']).apply(lambda x:
+    rhat = barpars.unstack('chain').groupby(['time', 'parameter']).apply(lambda x:
             az.rhat(x.values.T)).to_frame('rhat')
 
-    map = barpars.groupby(['frame', 'parameter']).mean().rename(columns={'value':'estimate'})
-    hdi = barpars.groupby(['frame', 'parameter']).apply(get_hdi)
-    std = barpars.groupby(['frame', 'parameter']).std().rename(columns={'value':'std'})
+    map = barpars.groupby(['time', 'parameter']).mean().rename(columns={'value':'estimate'})
+    hdi = barpars.groupby(['time', 'parameter']).apply(get_hdi)
+    std = barpars.groupby(['time', 'parameter']).std().rename(columns={'value':'std'})
     ground_truth = get_dm_parameters(task=task)
     ground_truth = ground_truth.assign(direction=ground_truth['angle'].map({0.0:'horizontal', .5*np.pi:'vertical'}))
     ground_truth.set_index('direction', append=True, inplace=True)
@@ -45,21 +45,23 @@ def get_mcmc_summary(barpars, n_burnin, task='FS', dropna=True):
 
 def plot_mcmc_summary(summary_pars, nan_empty_frames=True, task='FS',  **kwargs):
 
-    # if nan_empty_frames:
-        # ground_truth = get_dm_parameters(task=task).stack(dropna=False).to_frame('value')
+    if nan_empty_frames:
+        ground_truth = get_dm_parameters(task=task).stack(dropna=False).to_frame('value')
 
-    # if task == 'aperture':
-        # ground_truth = ground_truth.query('parameter in ["x", "height"]')
+    if task == 'aperture':
+        ground_truth = ground_truth.query('parameter in ["x", "height"]')
 
-    # summary_pars = ground_truth.join(summary_pars.drop('value', axis=1).reset_index().set_index(['frame', 'parameter']),
-            # on=['frame', 'parameter'])
+    summary_pars = ground_truth.join(summary_pars.drop('value', axis=1).reset_index().set_index(['time', 'parameter']),
+            on=['time', 'parameter'])
 
     fac = sns.FacetGrid(summary_pars.reset_index(), col='parameter', col_wrap=3, sharey=False, aspect=2.,
             **kwargs)
 
-    fac.map(plt.plot, 'frame', 'value', color='k')
-    fac.map(plt.plot, 'frame', 'estimate')
-    fac.map(plt.fill_between, 'frame', 'ci_min', 'ci_max', alpha=.5)
+    fac.map(plt.plot, 'time', 'value', color='k')
+    fac.map(plt.plot, 'time', 'estimate')
+    fac.map(plt.fill_between, 'time', 'ci_min', 'ci_max', alpha=.5)
+
+    return fac
 
 
 def check_prediction(summary_pars, by_direction=True):
