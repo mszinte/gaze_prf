@@ -47,3 +47,5 @@ or displaced to the left or to the right.<br/>
 * Draw Fullscreen attention R2 comparison using _analysis_code/prf/attcmp_plots.ipynb_<br/>
 * Draw exemple V1 timeseries and pRF model using _analysis_code/prf/timeseries_plots.ipynb_<br/>
 * Compute out of set r2 change using _analysis_code/prf/fs_fit_cmp_plots.ipynb_<br/>
+* Draw refit pRFx parameter using _analysis_code/prf/refit_pRFx_plots.ipynb_<br/>
+* Draw refit reference frame index using _analysis_code/prf/refit_indexcmp_plots.ipynb_<br/>
