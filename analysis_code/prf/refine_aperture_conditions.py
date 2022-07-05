@@ -69,7 +69,6 @@ def main(subject, bids_folder, starting_model='retinotopic',
                             bids_folder=bids_folder)
 
         data = get_data(subject, bids_folder=bids_folder,
-                        fullscreen=False,
                         task=task,
                         gaze=gaze,
                         masker=masker)
