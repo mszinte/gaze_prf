@@ -31,14 +31,14 @@ def main(subject, bids_folder):
                         bids_folder=bids_folder)
 
     for task in ['AttendStim', 'AttendFix']:
-        retinotopic_model = get_prf_model(
-            subject, task=task, gaze='Center', bids_folder=bids_folder)
 
         r2s_retinotopic = []
         r2s_spatiotopic = []
 
-        for gaze in ['Left', 'Right']:
+        for gaze in ['Left', 'Right', 'Center']:
 
+            retinotopic_model = get_prf_model(
+                subject, task=task, bids_folder=bids_folder)
             spatiotopic_model = get_prf_model(
                 subject, task=task, bids_folder=bids_folder)
 
@@ -48,7 +48,7 @@ def main(subject, bids_folder):
                 spatiotopic_model.parameters['x'] -= 4
 
             data = get_data(subject, bids_folder=bids_folder,
-                            fullscreen=False,
+                            # fullscreen=False,
                             task=task,
                             gaze=gaze,
                             masker=masker)
@@ -81,6 +81,14 @@ def main(subject, bids_folder):
             gardner = (r2_retinotopic - r2_spatiotopic) / \
                 (r2_retinotopic + r2_spatiotopic)
 
+            masker.inverse_transform(retinotopic_predictions).to_filename(op.join(target_dir,
+                                                                         f'sub-{subject}_task-{task}Gaze{gaze}_desc-retinotopic_predictions.nii.gz'))
+            masker.inverse_transform(spatiotopic_predictions).to_filename(op.join(target_dir,
+                                                                         f'sub-{subject}_task-{task}Gaze{gaze}_desc-spatiotopic_predictions.nii.gz'))
+
+            masker.inverse_transform(data).to_filename(op.join(target_dir,
+                                                                         f'sub-{subject}_task-{task}Gaze{gaze}_desc-average_bold.nii.gz'))
+
             masker.inverse_transform(r2_retinotopic).to_filename(op.join(target_dir,
                                                                          f'sub-{subject}_task-{task}Gaze{gaze}_desc-retinotopic_r2.nii.gz'))
             masker.inverse_transform(r2_spatiotopic).to_filename(op.join(target_dir,
@@ -88,8 +96,8 @@ def main(subject, bids_folder):
             masker.inverse_transform(gardner).to_filename(op.join(target_dir,
                                                                   f'sub-{subject}_task-{task}Gaze{gaze}_gardner.nii.gz'))
 
-        r2s_retinotopic = np.mean(r2s_retinotopic, 0)
-        r2s_spatiotopic = np.mean(r2s_spatiotopic, 0)
+        r2s_retinotopic = np.mean(r2s_retinotopic[:2], 0)
+        r2s_spatiotopic = np.mean(r2s_spatiotopic[:2], 0)
         gardner = (r2s_retinotopic - r2s_spatiotopic) / \
             (r2s_retinotopic + r2s_spatiotopic)
 
@@ -112,7 +120,7 @@ def main(subject, bids_folder):
                 p.T, columns=['r2_retinotopic', 'r2_spatiotopic', 'gardner'])
             p.index.name = 'voxel'
             p.to_csv(op.join(
-                target_dir, f'sub-{subject}_task-{task}_r2s.tsv'))
+                target_dir, f'sub-{subject}_task-{task}_roi-{roi}_r2s.tsv'))
 
 
 if __name__ == '__main__':
