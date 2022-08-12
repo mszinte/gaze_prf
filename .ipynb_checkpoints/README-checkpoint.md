@@ -35,7 +35,7 @@ or displaced to the left or to the right.<br/>
 * Average runs togehter _analysis_code/preproc/average_runs.py_<br/>
 
 # Post-processing
-* Compute pRF across conditions using _GILLES_ ...
+* Compute pRF across conditions
 * Create pRF threshold mask using _analysis_code/prf/prf_th_masks.ipynb_<br/>
 * Generate Fullscreen retinotopy maps _analysis_code/prf/pycortex.ipynb_<br/>
 * Draw ROIS using Inkscape and Fullscreen maps<br/>
@@ -49,3 +49,8 @@ or displaced to the left or to the right.<br/>
 * Compute out of set r2 change using _analysis_code/prf/fs_fit_cmp_plots.ipynb_<br/>
 * Draw refit pRFx parameter using _analysis_code/prf/refit_pRFx_plots.ipynb_<br/>
 * Draw refit reference frame index using _analysis_code/prf/refit_indexcmp_plots.ipynb_<br/>
+* Compute decoding outcomes pikkles using _analysis_code/decode/make_tsv.ipynb_<br/>
+* Draw decoding time series using _analysis_code/decode/decode_timeseries_plot.ipynb_<br/>
+* Draw decoding time series across bar pass using _analysis_code/decode/decode_time_cor_plot.ipynb_<br/>
+* Draw decoding correlations to ground truth using _analysis_code/decode/decode_correlation_plot.ipynb_<br/>
+* Draw decoding reference frame index using _analysis_code/decode/decode_ref_index_plot.ipynb_<br/>
