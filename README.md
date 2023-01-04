@@ -23,34 +23,34 @@ or displaced to the left or to the right.<br/>
 
 # Pre-processing
 * Convert data in bids.<br/>
-* Run fmriprpep with anat-only option using _analysis_code/preproc/fmriprep_sbatch.py_<br/>
-* Manual edition of the pial surface using freeview launched using _analysis_code/preproc/pial_edits.py_ and following these [rules](http://surfer.nmr.mgh.harvard.edu/fswiki/FsTutorial/PialEditsV6.0)<br/>
-* Re-run freesurfer with change of the pial surface using _analysis_code/preproc/freesurfer_pial.py_<br/>
-* Cut brains and flatten hemispheres using _analysis_code/preproc/flatten_sbatch.py_<br/>
-* Run fmriprpep for functionnal runs using _analysis_code/preproc/fmriprep_sbatch.py_<br/>
-* Deface T1w/T2w data using _analysis_codes/preproc/deface_sbatch.py_<br/>
-* Run pybest to z-scores, high pass filter the data using _analysis_code/preproc/pybest_sbatch.py_<br/>
-* Arrange data in pp_data folder _analysis_code/preproc/preproc_end.py_<br/>
-* Import in pycortex surfaces and flatmaps using _analysis_code/preproc/pycortex_import.py_<br/>
-* Average runs togehter _analysis_code/preproc/average_runs.py_<br/>
+* Run fmriprpep with anat-only option: [_fmriprep_sbatch.py_](analysis_code/preproc/fmriprep_sbatch.py)<br/>
+* Manual edition of the pial surface using freeview launched: [_pial_edits.py_](analysis_code/preproc/pial_edits.py) and following these [rules](http://surfer.nmr.mgh.harvard.edu/fswiki/FsTutorial/PialEditsV6.0)<br/>
+* Re-run freesurfer with change of the pial surface: [_freesurfer_pial.py_](analysis_code/preproc/freesurfer_pial.py)<br/>
+* Cut brains and flatten hemispheres: [_flatten_sbatch.py_](analysis_code/preproc/flatten_sbatch.py)<br/>
+* Run fmriprpep for functionnal runs: [_fmriprep_sbatch.py_](analysis_code/preproc/fmriprep_sbatch.py)<br/>
+* Deface T1w/T2w data: [_deface_sbatch.py_](analysis_code/preproc/deface_sbatch.py)<br/>
+* Run pybest to z-scores, high pass filter the data: [_pybest_sbatch.py_](analysis_code/preproc/pybest_sbatch.py)<br/>
+* Arrange data in pp_data folder: [_preproc_end.py_](analysis_code/preproc/preproc_end.py)<br/>
+* Import in pycortex surfaces and flatmaps: [_pycortex_import.py_](analysis_code/preproc/pycortex_import.py)<br/>
+* Average runs together: [_average_runs.py_](analysis_code/preproc/average_runs.py)<br/>
 
 # Post-processing
-* Compute pRF across conditions
-* Create pRF threshold mask using _analysis_code/prf/prf_th_masks.ipynb_<br/>
-* Generate Fullscreen retinotopy maps _analysis_code/prf/pycortex.ipynb_<br/>
+* Compute pRF across conditions 
+* Create pRF threshold mask: [_prf_th_masks.ipynb_](analysis_code/prf/prf_th_masks.ipynb)<br/>
+* Generate Fullscreen retinotopy maps: [_pycortex.ipynb_](analysis_code/prf/pycortex.ipynb)<br/>
 * Draw ROIS using Inkscape and Fullscreen maps<br/>
-* Define ROI masks nifti files using _analysis_code/prf/roi_masks.ipynb_<br/>
-* Generate "all" pycortex flatmaps and webgl using _analysis_code/prf/pycortex.ipynb_<br/>
-* Push subjects webgl online using _analysis_code/prf/webgl.ipynb_<br/>
-* Create TSV files of stats comparisons using _analysis_code/prf/make_tsv.ipynb_<br/>
-* Compute pickle files with all timeseries/predictions of out of set analysis _analysis_code/prf/make_tsv.ipynb_<br/>
-* Draw Fullscreen attention R2 comparison using _analysis_code/prf/attcmp_plots.ipynb_<br/>
-* Draw exemple V1 timeseries and pRF model using _analysis_code/prf/timeseries_plots.ipynb_<br/>
-* Compute out of set r2 change using _analysis_code/prf/fs_fit_cmp_plots.ipynb_<br/>
-* Draw refit pRFx parameter using _analysis_code/prf/refit_pRFx_plots.ipynb_<br/>
-* Draw refit reference frame index using _analysis_code/prf/refit_indexcmp_plots.ipynb_<br/>
-* Compute decoding outcomes pikkles using _analysis_code/decode/make_tsv.ipynb_<br/>
-* Draw decoding time series using _analysis_code/decode/decode_timeseries_plot.ipynb_<br/>
-* Draw decoding time series across bar pass using _analysis_code/decode/decode_time_cor_plot.ipynb_<br/>
-* Draw decoding correlations to ground truth using _analysis_code/decode/decode_correlation_plot.ipynb_<br/>
-* Draw decoding reference frame index using _analysis_code/decode/decode_ref_index_plot.ipynb_<br/>
+* Define ROI masks nifti files: [_roi_masks.ipynb_](analysis_code/prf/roi_masks.ipynb)<br/>
+* Generate "all" pycortex flatmaps and webgl: [_pycortex.ipynb_](analysis_code/prf/pycortex.ipynb)<br/>
+* Push subjects webgl online: [_webgl.ipynb_](analysis_code/prf/webgl.ipynb)<br/>
+* Create TSV files of stats comparisons: [_make_tsv.ipynb_](analysis_code/prf/make_tsv.ipynb)<br/>
+* Compute pickle files with all timeseries/predictions of out of set analysis: [_make_tsv.ipynb_](analysis_code/prf/make_tsv.ipynb)<br/>
+* Draw Fullscreen attention R2 comparison: [_attcmp_plots.ipynb_](analysis_code/prf/attcmp_plots.ipynb)<br/>
+* Draw exemple V1 timeseries and pRF model: [_timeseries_plots.ipynb_](analysis_code/prf/timeseries_plots.ipynb)<br/>
+* Compute out of set r2 change: [_fs_fit_cmp_plots.ipynb_](analysis_code/prf/fs_fit_cmp_plots.ipynb)<br/>
+* Draw refit pRFx parameter: [_refit_pRFx_plots.ipynb_](analysis_code/prf/refit_pRFx_plots.ipynb)<br/>
+* Draw refit reference frame index: [_refit_indexcmp_plots.ipynb_](analysis_code/prf/refit_indexcmp_plots.ipynb)<br/>
+* Compute decoding outcomes pickle files: [_make_tsv.ipynb_](analysis_code/prf/make_tsv.ipynb)<br/>
+* Draw decoding time series using [_decode_timeseries_plot.ipynb_](analysis_code/decode/decode_timeseries_plot.ipynb)<br/>
+* Draw decoding time series across bar pass: [_decode_time_cor_plot.ipynb_](analysis_code/decode/decode_time_cor_plot.ipynb)<br/>
+* Draw decoding correlations to ground truth: [_decode_correlation_plot.ipynb_](analysis_code/decode/decode_correlation_plot.ipynb)<br/>
+* Draw decoding reference frame index: [_decode_ref_index_plot.ipynb_](analysis_code/decode/decode_ref_index_plot.ipynb)<br/>
