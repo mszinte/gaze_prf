@@ -16,12 +16,12 @@ or displaced to the left or to the right.<br/>
 ## Analysis code
 
 ### Behavioral analysis
-* Compute and plot performance results using _analysis_code/behav/behav_results.ipynb_<br/>
+* Compute and plot performance results: [_behav_results.ipynb_](analysis_code/behav/behav_results.ipynb)<br/>
 * Compute and plot eccentricity results using _analysis_code/behav/ecc_results.ipynb_<br/>
 
 ### MRI analysis
 
-# Pre-processing
+#### Pre-processing
 * Convert data in bids.<br/>
 * Run fmriprpep with anat-only option: [_fmriprep_sbatch.py_](analysis_code/preproc/fmriprep_sbatch.py)<br/>
 * Manual edition of the pial surface using freeview launched: [_pial_edits.py_](analysis_code/preproc/pial_edits.py) and following these [rules](http://surfer.nmr.mgh.harvard.edu/fswiki/FsTutorial/PialEditsV6.0)<br/>
@@ -34,7 +34,7 @@ or displaced to the left or to the right.<br/>
 * Import in pycortex surfaces and flatmaps: [_pycortex_import.py_](analysis_code/preproc/pycortex_import.py)<br/>
 * Average runs together: [_average_runs.py_](analysis_code/preproc/average_runs.py)<br/>
 
-# Post-processing
+##### Post-processing
 * Compute pRF across conditions 
 * Create pRF threshold mask: [_prf_th_masks.ipynb_](analysis_code/prf/prf_th_masks.ipynb)<br/>
 * Generate Fullscreen retinotopy maps: [_pycortex.ipynb_](analysis_code/prf/pycortex.ipynb)<br/>
@@ -45,7 +45,7 @@ or displaced to the left or to the right.<br/>
 * Create TSV files of stats comparisons: [_make_tsv.ipynb_](analysis_code/prf/make_tsv.ipynb)<br/>
 * Compute pickle files with all timeseries/predictions of out of set analysis: [_make_tsv.ipynb_](analysis_code/prf/make_tsv.ipynb)<br/>
 * Draw Fullscreen attention R2 comparison: [_attcmp_plots.ipynb_](analysis_code/prf/attcmp_plots.ipynb)<br/>
-* Draw exemple V1 timeseries and pRF model: [_timeseries_plots.ipynb_](analysis_code/prf/timeseries_plots.ipynb)<br/>
+* Draw timeseries and pRF model: [_timeseries_plot.ipynb_](analysis_code/prf/timeseries_plot.ipynb)<br/>
 * Compute out of set r2 change: [_fs_fit_cmp_plots.ipynb_](analysis_code/prf/fs_fit_cmp_plots.ipynb)<br/>
 * Draw refit pRFx parameter: [_refit_pRFx_plots.ipynb_](analysis_code/prf/refit_pRFx_plots.ipynb)<br/>
 * Draw refit reference frame index: [_refit_indexcmp_plots.ipynb_](analysis_code/prf/refit_indexcmp_plots.ipynb)<br/>
@@ -54,3 +54,15 @@ or displaced to the left or to the right.<br/>
 * Draw decoding time series across bar pass: [_decode_time_cor_plot.ipynb_](analysis_code/decode/decode_time_cor_plot.ipynb)<br/>
 * Draw decoding correlations to ground truth: [_decode_correlation_plot.ipynb_](analysis_code/decode/decode_correlation_plot.ipynb)<br/>
 * Draw decoding reference frame index: [_decode_ref_index_plot.ipynb_](analysis_code/decode/decode_ref_index_plot.ipynb)<br/>
+
+#### Figures
+
+##### Figure 1
+* Figure 1C: [_behav_results.ipynb_](analysis_code/behav/behav_results.ipynb)<br/>
+* Figure 1D: [_timeseries_plot.ipynb_](analysis_code/prf/timeseries_plot.ipynb)<br/>
+* Figure 1G-H: [_pycortex.ipynb_](analysis_code/prf/pycortex.ipynb)<br/>
+* Figure 1I: [_attcmp_plots.ipynb_](analysis_code/prf/attcmp_plots.ipynb)<br/>
+
+##### Figure 2
+* Figure 2B: [_timeseries_plot.ipynb_](analysis_code/prf/timeseries_plot.ipynb)<br/>
+* Figure 2D-E: [_fs_fit_cmp_plots.ipynb_](analysis_code/prf/fs_fit_cmp_plots.ipynb)<br/>
