@@ -36,6 +36,9 @@ or displaced to the left or to the right.<br/>
 
 ##### Post-processing
 * Compute pRF across conditions 
+* Compute pRF out-of_set fit
+* Compute pRF refit
+* Compute decoding
 * Create pRF threshold mask: [_prf_th_masks.ipynb_](analysis_code/prf/prf_th_masks.ipynb)<br/>
 * Generate Fullscreen retinotopy maps: [_pycortex.ipynb_](analysis_code/prf/pycortex.ipynb)<br/>
 * Draw ROIS using Inkscape and Fullscreen maps<br/>
@@ -64,5 +67,10 @@ or displaced to the left or to the right.<br/>
 * Figure 1I: [_attcmp_plots.ipynb_](analysis_code/prf/attcmp_plots.ipynb)<br/>
 
 ##### Figure 2
-* Figure 2B: [_timeseries_plot.ipynb_](analysis_code/prf/timeseries_plot.ipynb)<br/>
+* Figure 2B-C: [_timeseries_plot.ipynb_](analysis_code/prf/timeseries_plot.ipynb)<br/>
 * Figure 2D-E: [_fs_fit_cmp_plots.ipynb_](analysis_code/prf/fs_fit_cmp_plots.ipynb)<br/>
+
+##### Figure 3
+* Figure 3C-D: [_refit_pRFx_plots.ipynb_](analysis_code/prf/refit_pRFx_plots.ipynb)<br/>
+* Figure 3F: [_refit_indexcmp_plots.ipynb_](analysis_code/prf/refit_indexcmp_plots.ipynb)<br/>
+* Figure 3G: [_pycortex.ipynb_](analysis_code/prf/pycortex.ipynb)<br/>
