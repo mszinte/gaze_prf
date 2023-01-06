@@ -72,5 +72,12 @@ or displaced to the left or to the right.<br/>
 
 ##### Figure 3
 * Figure 3C-D: [_refit_pRFx_plots.ipynb_](analysis_code/prf/refit_pRFx_plots.ipynb)<br/>
-* Figure 3F: [_refit_indexcmp_plots.ipynb_](analysis_code/prf/refit_indexcmp_plots.ipynb)<br/>
-* Figure 3G: [_pycortex.ipynb_](analysis_code/prf/pycortex.ipynb)<br/>
+* Figure 3E: [_refit_indexcmp_plots.ipynb_](analysis_code/prf/refit_indexcmp_plots.ipynb)<br/>
+* Figure 3F-G: [_pycortex.ipynb_](analysis_code/prf/pycortex.ipynb)<br/>
+
+##### Figure 4
+* Figure 4A-B: [_timeseries_plot.ipynb_](analysis_code/prf/timeseries_plot.ipynb)<br/>
+* Figure 4C: [_decode_timeseries_plot.ipynb_](analysis_code/decode/decode_timeseries_plot.ipynb)<br/>
+* Figure 4D: [_decode_time_cor_plot.ipynb_](analysis_code/decode/decode_time_cor_plot.ipynb)<br/>
+* Figure 4E: [_decode_correlation_plot.ipynb_](analysis_code/decode/decode_correlation_plot.ipynb)<br/>
+* Figure 4F: [_decode_ref_index_plot.ipynb_](analysis_code/decode/decode_ref_index_plot.ipynb)<br/>
