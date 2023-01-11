@@ -78,6 +78,6 @@ or displaced to the left or to the right.<br/>
 ##### Figure 4
 * Figure 4A-B: [_timeseries_plot.ipynb_](analysis_code/prf/timeseries_plot.ipynb)<br/>
 * Figure 4C: [_decode_timeseries_plot.ipynb_](analysis_code/decode/decode_timeseries_plot.ipynb)<br/>
-* Figure 4D: [_decode_time_cor_plot.ipynb_](analysis_code/decode/decode_time_cor_plot.ipynb)<br/>
-* Figure 4E: [_decode_correlation_plot.ipynb_](analysis_code/decode/decode_correlation_plot.ipynb)<br/>
-* Figure 4F: [_decode_ref_index_plot.ipynb_](analysis_code/decode/decode_ref_index_plot.ipynb)<br/>
+* Figure 4D-E: [_decode_time_cor_plot.ipynb_](analysis_code/decode/decode_time_cor_plot.ipynb)<br/>
+* Figure 4F: [_decode_correlation_plot.ipynb_](analysis_code/decode/decode_correlation_plot.ipynb)<br/>
+* Figure 4G: [_decode_ref_index_plot.ipynb_](analysis_code/decode/decode_ref_index_plot.ipynb)<br/>
