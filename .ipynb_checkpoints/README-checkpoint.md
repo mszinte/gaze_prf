@@ -38,7 +38,6 @@ or displaced to the left or to the right.<br/>
 * Compute pRF across conditions 
 * Compute pRF out-of_set fit
 * Compute pRF refit
-* Compute decoding
 * Create pRF threshold mask: [_prf_th_masks.ipynb_](analysis_code/prf/prf_th_masks.ipynb)<br/>
 * Generate Fullscreen retinotopy maps: [_pycortex.ipynb_](analysis_code/prf/pycortex.ipynb)<br/>
 * Draw ROIS using Inkscape and Fullscreen maps<br/>
@@ -57,6 +56,8 @@ or displaced to the left or to the right.<br/>
 * Draw decoding time series across bar pass: [_decode_time_cor_plot.ipynb_](analysis_code/decode/decode_time_cor_plot.ipynb)<br/>
 * Draw decoding correlations to ground truth: [_decode_correlation_plot.ipynb_](analysis_code/decode/decode_correlation_plot.ipynb)<br/>
 * Draw decoding reference frame index: [_decode_ref_index_plot.ipynb_](analysis_code/decode/decode_ref_index_plot.ipynb)<br/>
+* Compute decoding statistics [_Central stats decoding.ipynb.ipynb_](analysis_code/decode/Central stats decoding.ipynb)<br/>
+* Statistics for manuscript [_manuscript_stats.md_](analysis_code/manuscript/manuscript_stats.md)<br/>
 
 #### Figures
 
