@@ -67,7 +67,7 @@ def get_sample_summary(subject, session, task, gaze, run, roi):
     f'sub-{subject}_ses-{session}_task-{task}Gaze{gaze}_run-1_roi-{roi}_nvoxels-{n_voxels}_resizefactor-{resize_factor}_mcmcbarpars.tsv')
 
     if op.exists(fn):
-        d = pd.read_csv(fn, sep='\t').rename(columns={'time':'frame'})
+        d = pd.read_csv(fn, sep='\t')#.rename(columns={'time':'frame'})
 
         map_ = op.join(sourcedata, 'derivatives', 'barfits', f'sub-{subject}', f'ses-{session}', 'func',
         f'sub-{subject}_ses-{session}_task-{task}Gaze{gaze}_run-1_roi-{roi}_nvoxels-{n_voxels}_resizefactor-{resize_factor}_barpars.tsv')
