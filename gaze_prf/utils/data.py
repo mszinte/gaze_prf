@@ -211,8 +211,8 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
             pars = pd.concat(pars, axis=1)
 
         else:
-            pars = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
-                                       f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.fit_parameters.tsv'), sep='\t', index_col=0)
+            get_data = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
+                                       f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.optim.parameters.tsv'), sep='\t', index_col=0)
 
     else:
         raise NotImplementedError()
@@ -249,13 +249,14 @@ def get_prf_model(subject, session=None, gaze=None, task=None, run=None,
 def get_brain_mask(subject, bids_folder='/tank/shared/2021/visual/pRFgazeMod/',
                    resample_to_func=True):
 
-    mask = image.load_img(op.join(bids_folder, f'deriv_data/fmriprep/fmriprep/',
-                                  f'sub-{subject}', 'anat', f'sub-{subject}_desc-brain_mask.nii.gz'))
-
     if resample_to_func:
-        return resample_mask_to_functional_space(subject, mask, bids_folder)
+        mask = image.load_img(op.join(bids_folder, f'deriv_data/fmriprep/fmriprep/',
+                                    f'sub-{subject}', 'anat', f'sub-{subject}_desc-brain_space-func_mask.nii.gz'))
+        print('yo')
     else:
-        return mask
+        mask = image.load_img(op.join(bids_folder, f'deriv_data/fmriprep/fmriprep/',
+                                    f'sub-{subject}', 'anat', f'sub-{subject}_desc-brain_mask.nii.gz'))
+    return mask
 
 
 def get_masker(subject, roi='brainmask',
@@ -291,10 +292,12 @@ def get_roi_mask(subject, mask, bids_folder,
 
     if hemi in ['L', 'R']:
         return image.load_img(op.join(folder, f'{mask}_cortical_{hemi}.nii.gz'))
-    else:
+    elif hemi == 'both':
         mask_l = image.load_img(op.join(folder, f'{mask}_cortical_L.nii.gz'))
         mask_r = image.load_img(op.join(folder, f'{mask}_cortical_R.nii.gz'))
         return image.math_img('mask_l+mask_r', mask_l=mask_l, mask_r=mask_r)
+    else:
+        raise ValueError(f'{hemi} is not a valid hemisphere, use L/R/both')
 
 
 def get_all_roi_labels():
