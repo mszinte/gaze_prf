@@ -9,7 +9,8 @@ def draw_cortex(subject, xfmname, data, vmin, vmax, description, cortex_type='Vo
                 alpha=None, depth=1, thick=1, height=1024, sampler='nearest',
                 with_curvature=True, with_labels=False, with_colorbar=False,
                 with_borders=False, curv_brightness=0.95, curv_contrast=0.05, add_roi=False,
-                roi_name='empty', col_offset=0, cbar_label='', save_fig=True):
+                roi_name='empty', col_offset=0, cbar_label='', save_fig=True, zoom_to_roi=False, 
+                zoom_roi='V1', zoom_roi_hemi='left'):
     """
     Plot brain data onto a previously saved flatmap.
     Parameters
@@ -40,6 +41,9 @@ def draw_cortex(subject, xfmname, data, vmin, vmax, description, cortex_type='Vo
     roi_name            : roi name
     col_offset          : colormap offset between 0 and 1
     save_fig            : return figure
+    zoom_to_roi         : create zoom on a region of interest
+    zoom_roi            : name of the roi to zoom on
+    zoom_roi_hemi       : hemifield of the roi to zoom on (left or right)
 
     Returns
     -------
@@ -70,8 +74,27 @@ def draw_cortex(subject, xfmname, data, vmin, vmax, description, cortex_type='Vo
     
 
     if save_fig == True:
-        braindata_fig = cortex.quickshow(braindata=braindata, depth=depth, thick=thick, height=height, sampler=sampler, with_curvature=with_curvature, with_labels=with_labels, 
-                                     with_colorbar=with_colorbar, with_borders=with_borders, curvature_brightness=curv_brightness, curvature_contrast=curv_contrast)
+        braindata_fig = cortex.quickshow(braindata=braindata, depth=depth, thick=thick, height=height, 
+                                         sampler=sampler, with_curvature=with_curvature, with_labels=with_labels, 
+                                         with_colorbar=with_colorbar, with_borders=with_borders, 
+                                         curvature_brightness=curv_brightness,
+                                         curvature_contrast=curv_contrast
+                                        )
+        
+        if zoom_to_roi == True:
+            roi_verts = cortex.get_roi_verts(subject, zoom_roi)[zoom_roi]
+            roi_map = cortex.Vertex.empty(subject)
+            roi_map.data[roi_verts] = 1
+
+            (lflatpts, lpolys), (rflatpts, rpolys) = cortex.db.get_surf(subject, "flat", nudge=True)
+            sel_pts = dict(left=lflatpts, right=rflatpts)[zoom_roi_hemi]
+            roi_pts = sel_pts[np.nonzero(getattr(roi_map, zoom_roi_hemi))[0],:2]
+
+            margin = 10
+            xmin, ymin = roi_pts.min(0) - margin
+            xmax, ymax = roi_pts.max(0) + margin
+            plt.axis([xmin, xmax, ymin, ymax])
+        
         if cbar == 'polar':
             try: base = plt.cm.get_cmap(cmap)
             except: base = cortex.utils.get_cmap(cmap)
@@ -142,5 +165,7 @@ def draw_cortex(subject, xfmname, data, vmin, vmax, description, cortex_type='Vo
     if add_roi == True:
         cortex.utils.add_roi(data=braindata, name=roi_name, open_inkscape=False, add_path=False, depth=depth, thick=thick, sampler=sampler, with_curvature=with_curvature,
                              with_colorbar=with_colorbar, with_borders=with_borders, curvature_brightness=curv_brightness, curvature_contrast=curv_contrast)
+        
+
         
     return braindata, braindata_fig
