@@ -59,6 +59,10 @@ or displaced to the left or to the right.<br/>
 * Compute decoding statistics [_Central_stats_decoding.ipynb.ipynb_](analysis_code/decode/Central\stats\decoding.ipynb)<br/>
 * Statistics for manuscript [_manuscript_stats.ipynb_](analysis_code/manuscript/manuscript_stats.ipynb)<br/>
 
+_Optional:_
+* Compute GLM in link with gainfield results [_get_gainfield_betas.py_](analysis_code/glm/get_gainfield_betas.py)<br/>
+* Draw pycortex flatmap of gainfield results [_pycortex.ipynb_](analysis_code/glm/pycortex.ipynb)<br/>
+
 #### Figures
 
 ##### Figure 1
