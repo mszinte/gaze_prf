@@ -62,6 +62,7 @@ or displaced to the left or to the right.<br/>
 _Optional:_
 * Compute GLM in link with gainfield results [_get_gainfield_betas.py_](analysis_code/glm/get_gainfield_betas.py)<br/>
 * Draw pycortex flatmap of gainfield results [_pycortex.ipynb_](analysis_code/glm/pycortex.ipynb)<br/>
+* Draw GLM with gainfiled results comparison [_glmcmp_plots.ipynb_](analysis_code/glm/glmcmp_plots.ipynb)<br/>
 
 #### Figures
 
