@@ -137,8 +137,8 @@ def get_data(subject=None, session=None, gaze=None, task=None, run=None,
     for session, gaze, task, label, run in pbar:
         pbar.set_description(
             f'Session {session}, Gaze {gaze}, Task {task}, run {run}')
-        fn = op.join(bids_folder, f'pp_data/sub-{subject}/func/fmriprep_dct',
-                     f'sub-{subject}_ses-{session}_task-{label}_run-{run}_fmriprep_dct.nii.gz')
+        fn = op.join(bids_folder, f'pp_data/sub-{subject}/func/fmriprep_dct_pca',
+                     f'sub-{subject}_ses-{session}_task-{label}_run-{run}_fmriprep_dct_pca.nii.gz')
         keys.append((session, gaze, task, run))
         d = pd.DataFrame(masker.fit_transform(fn))
         d.index.name, d.columns.name = 'time', 'voxel'
