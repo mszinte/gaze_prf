@@ -149,11 +149,22 @@ def get_data(subject=None, session=None, gaze=None, task=None, run=None,
     return data
 
 
+def get_subject_string(subject):
+
+    if type(subject) is int:
+        subject = f'{subject:03d}'
+
+    return subject
+
+
 def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
                        masker=None,
                        roi=None,
                        filter=False,
+                       optimizer_startingpoint=None,
                        bids_folder='/tank/shared/2021/visual/pRFgazeMod'):
+
+    subject = get_subject_string(subject)
 
     parameters = ['x', 'y', 'sd', 'baseline', 'amplitude', 'r2']
 
@@ -211,8 +222,14 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
             pars = pd.concat(pars, axis=1)
 
         else:
-            get_data = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
-                                       f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.optim.parameters.tsv'), sep='\t', index_col=0)
+            if optimizer_startingpoint is None:
+                pars = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
+                                        f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.optim_parameters.tsv'), sep=',', index_col=0)
+            else:
+                assert optimizer_startingpoint in ['retinotopic', 'spatiotopic'], 'optimizer_startingpoint should be `spatiotopic` or `retinotopic`'
+                pars = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
+                                        f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.startwith-{optimizer_startingpoint}_parameters.tsv'), sep=',', index_col=0)
+
 
     else:
         raise NotImplementedError()
@@ -432,3 +449,5 @@ def get_all_roi_labels():
             'VO']
 
 
+def get_all_subject_ids():
+    return [f'{x:003d}' for x in range(1, 9)]
