@@ -15,14 +15,14 @@ import pandas as pd
 import numpy as np
 
 
-def main(subject, bids_folder, resize_factor=3):
+def main(subject, bids_folder, normalize='zscore', resize_factor=3):
 
 
     masker = get_masker(subject, roi='brainmask',
             bids_folder=bids_folder)
 
-    data = get_data(subject, bids_folder=bids_folder, masker=masker)
-    mean_data = data.groupby('time').mean()
+    data = get_data(subject, bids_folder=bids_folder, masker=masker, normalize=normalize)
+    mean_data = data.groupby('frame').mean()
 
     chunks = mean_data.columns // 50000
 
@@ -82,7 +82,13 @@ def main(subject, bids_folder, resize_factor=3):
 
     print(pars.describe())
 
-    target_dir = op.join(bids_folder, 'derivatives', 'prf_fits.mean', f'sub-{subject}', 'func', )
+    key = 'prf_fits.mean'
+
+    if normalize == 'psc':
+        key += '.psc'
+
+    target_dir = op.join(bids_folder, 'derivatives', key, f'sub-{subject}', 'func', )
+
 
     if not op.exists(target_dir):
         os.makedirs(target_dir)
@@ -108,7 +114,8 @@ if __name__ == '__main__':
 
     parser.add_argument(
         '--bids_folder', default='/tank/shared/2021/visual/pRFgazeMod/')
+    parser.add_argument('--normalize', default='zscore')
 
     args = parser.parse_args()
 
-    main(args.subject, bids_folder=args.bids_folder)
+    main(args.subject, bids_folder=args.bids_folder, normalize=args.normalize)

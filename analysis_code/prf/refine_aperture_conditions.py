@@ -15,10 +15,17 @@ from itertools import product
 
 
 def main(subject, bids_folder, starting_model='retinotopic',
-         task=None, gaze=None, resize_factor=3):
+         task=None, gaze=None, resize_factor=3, normalize='zscore'):
 
-    target_dir = op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}',
-                         'func', )
+    
+    if normalize == 'zscore':
+        target_dir = op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}',
+                            'func', )
+    elif normalize == 'psc':
+        target_dir = op.join(bids_folder, 'derivatives', 'prf_fits.psc', f'sub-{subject}',
+                            'func', 'psc')
+    else:
+        raise ValueError(f'Unknown normalization method {normalize}')
 
     assert(starting_model in ['retinotopic', 'spatiotopic', 'combine'])
 
@@ -71,6 +78,7 @@ def main(subject, bids_folder, starting_model='retinotopic',
         data = get_data(subject, bids_folder=bids_folder,
                         task=task,
                         gaze=gaze,
+                        normalize=normalize,
                         masker=masker)
         chunks = data.columns // 50000
         data.columns = pd.MultiIndex.from_arrays(
@@ -94,6 +102,10 @@ def main(subject, bids_folder, starting_model='retinotopic',
                 grid_coordinates, paradigm, data=d, hrf_model=hrf_model)
 
             optimizer = ParameterFitter(model, model.data, paradigm)
+
+            print(d, init_pars)
+
+            print(model.predict(parameters=init_pars, paradigm=paradigm))
 
             pars = optimizer.refine_baseline_and_amplitude(init_pars)
             pars = optimizer.fit(init_pars=pars, learning_rate=1e-3, max_n_iterations=10000,
@@ -125,7 +137,7 @@ def main(subject, bids_folder, starting_model='retinotopic',
 
             return pars
 
-        data = data.groupby(['task', 'gaze', 'time']).mean()
+        data = data.groupby(['task', 'gaze', 'frame']).mean()
 
         for (task, gaze), d in data.groupby(['task', 'gaze']):
             print(task, gaze, d)
@@ -163,6 +175,7 @@ if __name__ == '__main__':
     parser.add_argument('starting_model')
     parser.add_argument('--gaze', default=None)
     parser.add_argument('--task', default=None)
+    parser.add_argument('--normalize', default='zscore')
 
     parser.add_argument(
         '--bids_folder', default='/tank/shared/2021/visual/pRFgazeMod/')
@@ -170,4 +183,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     main(args.subject, starting_model=args.starting_model,
-         bids_folder=args.bids_folder, gaze=args.gaze, task=args.task)
+         bids_folder=args.bids_folder, gaze=args.gaze, task=args.task, normalize=args.normalize)

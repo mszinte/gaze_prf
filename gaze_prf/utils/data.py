@@ -117,6 +117,7 @@ def parse_sets(session, gaze, task, run,
 
 
 def get_data(subject=None, session=None, gaze=None, task=None, run=None,
+             normalize='zscore',
              bids_folder='/tank/shared/2021/visual/pRFgazeMod',
              masker=None):
 
@@ -137,11 +138,20 @@ def get_data(subject=None, session=None, gaze=None, task=None, run=None,
     for session, gaze, task, label, run in pbar:
         pbar.set_description(
             f'Session {session}, Gaze {gaze}, Task {task}, run {run}')
-        fn = op.join(bids_folder, f'pp_data/sub-{subject}/func/fmriprep_dct_pca',
-                     f'sub-{subject}_ses-{session}_task-{label}_run-{run}_fmriprep_dct_pca.nii.gz')
+        
+        if normalize == 'zscore':
+            fn = op.join(bids_folder, f'pp_data/sub-{subject}/func/fmriprep_dct_pca',
+                        f'sub-{subject}_ses-{session}_task-{label}_run-{run}_fmriprep_dct_pca.nii.gz')
+        elif normalize == 'psc':
+            fn = op.join(bids_folder, f'derivatives', 'filtered_data', f'sub-{subject}', 
+                        f'ses-{session}', 'func',
+                        f'sub-{subject}_ses-{session}_task-{label}_run-{run}_desc-cleaned_bold.nii.gz')
+        else:
+            raise ValueError('normalize should be `zscore` or `psc`')
+
         keys.append((session, gaze, task, run))
         d = pd.DataFrame(masker.fit_transform(fn))
-        d.index.name, d.columns.name = 'time', 'voxel'
+        d.index.name, d.columns.name = 'frame', 'voxel'
         data.append(d)
 
     data = pd.concat(data, keys=keys, names=['session', 'gaze', 'task', 'run'])
@@ -162,6 +172,7 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
                        roi=None,
                        filter=False,
                        optimizer_startingpoint=None,
+                       normalize='zscore',
                        bids_folder='/tank/shared/2021/visual/pRFgazeMod'):
 
     subject = get_subject_string(subject)
@@ -172,14 +183,18 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
         mask = get_brain_mask(subject, bids_folder)
         masker = NiftiMasker(mask)
 
+    assert normalize in ['zscore', 'psc'], 'normalize should be `zscore` or `psc`'
+
     if (session is None) and (gaze is None) and (task is None) and (run is None):
+
+        key = 'prf_fits.mean' if normalize == 'zscore' else 'prf_fits.mean.psc'
 
         fs_pars = []
 
         if roi is None:
 
             for parameter in parameters:
-                p = op.join(bids_folder, 'derivatives', 'prf_fits.mean', f'sub-{subject}',
+                p = op.join(bids_folder, 'derivatives', key, f'sub-{subject}',
                             'func', f'sub-{subject}_desc-gaussprf.{parameter}_parameters.nii.gz')
 
                 p = masker.fit_transform(p).ravel()
@@ -188,7 +203,7 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
 
             pars = pd.concat(fs_pars, axis=1)
         else:
-            pars = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits.mean', f'sub-{subject}', 'func',
+            pars = pd.read_csv(op.join(bids_folder, 'derivatives', key, f'sub-{subject}', 'func',
                                        f'sub-{subject}_roi-{roi}_desc-gaussprf.fit_parameters.tsv'), sep='\t', index_col=0)
 
     elif (session is None) and (gaze is None) and (task is not None) and (run is None):
@@ -382,7 +397,7 @@ def get_dm_parameters(bids_folder='/tank/shared/2021/visual/pRFgazeMod', include
         parameters['height'] = pd.read_csv(op.join(bids_folder, 'pp_data', 'visual_dm', 'bar_height.tsv'), sep='\t',
                                            index_col=0)
 
-    parameters.index.name = 'time'
+    parameters.index.name = 'frame'
     parameters.columns.name = 'parameter'
 
     bar_width = 19 / 240 * width_degrees
