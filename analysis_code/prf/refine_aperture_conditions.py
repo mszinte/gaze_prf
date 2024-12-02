@@ -149,7 +149,7 @@ def main(subject, bids_folder, starting_model='retinotopic',
                 init_pars = get_init_pars(d_.columns, starting_model, gaze)
                 pars.append(fit_prf(d_, init_pars))
 
-            pars = pd.concat(pars, 1).T
+            pars = pd.concat(pars, axis=1).T
             print(pars.describe())
 
             pars_im = masker.inverse_transform(pars.T)
