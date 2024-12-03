@@ -207,10 +207,19 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
                                        f'sub-{subject}_roi-{roi}_desc-gaussprf.fit_parameters.tsv'), sep='\t', index_col=0)
 
     elif (session is None) and (gaze is None) and (task is not None) and (run is None):
+
+        if normalize == 'zscore':
+            key = 'prf_fits'
+        elif normalize == 'psc':
+            key = 'prf_fits.psc'
+        else:
+            raise ValueError('normalize should be `zscore` or `psc`')
+
+
         if roi is None:
             pars = []
             for parameter in parameters:
-                p = op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}',
+                p = op.join(bids_folder, 'derivatives', key, f'sub-{subject}',
                             'func', f'sub-{subject}_task-{task}_desc-gaussprf.{parameter}_parameters.nii.gz')
 
                 p = masker.fit_transform(p).ravel()
@@ -220,14 +229,22 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
             pars = pd.concat(pars, axis=1)
 
         else:
-            pars = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
+            pars = pd.read_csv(op.join(bids_folder, 'derivatives', key, f'sub-{subject}', 'func',
                                        f'sub-{subject}_task-{task}_roi-{roi}_desc-gaussprf.fit_parameters.tsv'), sep='\t', index_col=0)
 
     elif (session is None) and (gaze is not None) and (task is not None) and (run is None):
+
+        if normalize == 'zscore':
+            key = 'prf_fits'
+        elif normalize == 'psc':
+            key = 'prf_fits.psc'
+        else:
+            raise ValueError('normalize should be `zscore` or `psc`')
+
         if roi is None:
             pars = []
             for parameter in parameters:
-                p = op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}',
+                p = op.join(bids_folder, 'derivatives', key, f'sub-{subject}',
                             'func', f'sub-{subject}_task-{task}Gaze{gaze}_desc-gaussprf.optim.{parameter}_parameters.nii.gz')
 
                 p = masker.fit_transform(p).ravel()
@@ -238,11 +255,11 @@ def get_prf_parameters(subject, session=None, gaze=None, task=None, run=None,
 
         else:
             if optimizer_startingpoint is None:
-                pars = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
+                pars = pd.read_csv(op.join(bids_folder, 'derivatives', key, f'sub-{subject}', 'func',
                                         f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.optim_parameters.tsv'), sep=',', index_col=0)
             else:
                 assert optimizer_startingpoint in ['retinotopic', 'spatiotopic'], 'optimizer_startingpoint should be `spatiotopic` or `retinotopic`'
-                pars = pd.read_csv(op.join(bids_folder, 'derivatives', 'prf_fits', f'sub-{subject}', 'func',
+                pars = pd.read_csv(op.join(bids_folder, 'derivatives', key, f'sub-{subject}', 'func',
                                         f'sub-{subject}_task-{task}Gaze{gaze}_roi-{roi}_desc-gaussprf.startwith-{optimizer_startingpoint}_parameters.tsv'), sep=',', index_col=0)
 
 
