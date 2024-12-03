@@ -10,9 +10,15 @@ from braincoder.utils import get_rsq
 from tqdm.contrib.itertools import product
 from tensorflow.linalg import lstsq
 
-def main(subject, bids_folder='/tank/shared/2021/visual/pRFgazeMod', resize_factor=3):
+def main(subject, bids_folder='/tank/shared/2021/visual/pRFgazeMod', resize_factor=3, normalize='zscore'):
 
-    target_dir = op.join(bids_folder, 'derivatives', 'gain_field_betas', f'sub-{subject}', 'func')
+    
+    if normalize == 'zscore':
+        target_dir = op.join(bids_folder, 'derivatives', 'gain_field_betas', f'sub-{subject}', 'func')
+    elif normalize == 'psc':
+        target_dir = op.join(bids_folder, 'derivatives', 'gain_field_betas.psc', f'sub-{subject}', 'func')
+    else:
+        raise ValueError(f'Unknown normalization method: {normalize}')
 
     if not op.exists(target_dir):
         os.makedirs(target_dir)
@@ -30,7 +36,7 @@ def main(subject, bids_folder='/tank/shared/2021/visual/pRFgazeMod', resize_fact
     prf_pars = []
     keys = []
     for task, gaze in product(['AttendFix', 'AttendStim'], ['Center']):
-        prf_pars.append(get_prf_parameters(subject, None, gaze, task, None, None, None, False))
+        prf_pars.append(get_prf_parameters(subject, None, gaze, task, None, None, None, False, normalize=normalize, bids_folder=bids_folder))
         keys.append((task, gaze))
 
     prf_pars = pd.concat(prf_pars, keys=keys, names=['task', 'gaze'])
@@ -44,12 +50,12 @@ def main(subject, bids_folder='/tank/shared/2021/visual/pRFgazeMod', resize_fact
 
     keys = []
     for task, gaze in product(['AttendFix', 'AttendStim'], ['Left', 'Center', 'Right']):
-        data.append(get_data(subject, None, gaze, task))
+        data.append(get_data(subject, None, gaze, task, normalize=normalize, bids_folder=bids_folder))
         keys.append((task, gaze)) 
     
     data = pd.concat(data)
 
-    data = data.groupby(['task', 'gaze', 'time', ]).mean()
+    data = data.groupby(['task', 'gaze', 'frame', ]).mean()
 
 
     masker = get_masker(subject)
@@ -74,7 +80,8 @@ if __name__ == '__main__':
     parser.add_argument('subject', default=None)
     parser.add_argument(
         '--bids_folder', default='/tank/shared/2021/visual/pRFgazeMod/')
+    parser.add_argument('--normalize', default='zscore')
 
     args = parser.parse_args()
 
-    main(args.subject, bids_folder=args.bids_folder)
+    main(args.subject, bids_folder=args.bids_folder, normalize=args.normalize)
