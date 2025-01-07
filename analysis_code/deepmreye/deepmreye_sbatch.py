@@ -21,12 +21,15 @@ To run:
 1. cd to function
 >> cd ~/projects/[PROJECT_DIR]/deepmreye/
 2. run python command
-python deepmreye_sbatch [main directory] [project name] [hour proc.] [gpu_(y/n)] 
+python deepmreye_sbatch [main directory] [project name] [gaze_task] [hour proc.] 
 						[email account] [group] [server_project]
 -----------------------------------------------------------------------------------------
 Exemple:
 cd ~/projects/gaze_prf/analysis_code/deepmreye/
-python deepmreye_sbatch.py /scratch/mszinte/data gaze_prf 20 martin.szinte@univ-amu.fr 327 b327
+python deepmreye_sbatch.py /scratch/mszinte/data gaze_prf GazeCenterFS 10 martin.szinte@univ-amu.fr 327 b327
+python deepmreye_sbatch.py /scratch/mszinte/data gaze_prf GazeCenter 10 martin.szinte@univ-amu.fr 327 b327
+python deepmreye_sbatch.py /scratch/mszinte/data gaze_prf GazeLeft 10 martin.szinte@univ-amu.fr 327 b327
+python deepmreye_sbatch.py /scratch/mszinte/data gaze_prf GazeRight 10 martin.szinte@univ-amu.fr 327 b327
 -----------------------------------------------------------------------------------------
 Written by Martin Szinte (martin.szinte@gmail.com)
 -----------------------------------------------------------------------------------------
@@ -43,10 +46,11 @@ opj = os.path.join
 # inputs
 main_dir = sys.argv[1]
 project_dir = sys.argv[2]
-hour_proc = int(sys.argv[3])
-email = sys.argv[4]
-group = sys.argv[5]
-server_project = sys.argv[6]
+gaze_task = sys.argv[3]
+hour_proc = int(sys.argv[4])
+email = sys.argv[5]
+group = sys.argv[6]
+server_project = sys.argv[7]
 
 # Define cluster/server specific parameters
 nb_procs = 8
@@ -67,16 +71,16 @@ slurm_cmd = """\
 #SBATCH --time={hour_proc}:00:00
 #SBATCH -e {log_dir}/deepmreye_%N_%j_%a.err
 #SBATCH -o {log_dir}/deepmreye_%N_%j_%a.out
-#SBATCH -J deepmreye
+#SBATCH -J deepmreye_{gaze_task}
 #SBATCH --mail-type=BEGIN,END\n\n
-""".format(server_project=server_project, nb_procs=nb_procs, hour_proc=hour_proc, 
+""".format(server_project=server_project, nb_procs=nb_procs, hour_proc=hour_proc, gaze_task=gaze_task,
 		   memory_val=memory_val, log_dir=log_dir, email=email, cluster_name=cluster_name)
 
 # Define main cmd
-main_cmd = 'python deepmreye_analysis.py {} {} {}'.format(main_dir, project_dir, group)
+main_cmd = 'python deepmreye_analysis.py {} {} {} {}'.format(main_dir, project_dir, gaze_task, group)
 
 # create sh folder and file
-sh_fn = "{main_dir}/{project_dir}/derivatives/deepmreye/jobs/deepmreye.sh".format(main_dir=main_dir, project_dir=project_dir)
+sh_fn = "{}/{}/derivatives/deepmreye/jobs/deepmreye_{}.sh".format(main_dir, project_dir, gaze_task)
 
 os.makedirs("{main_dir}/{project_dir}/derivatives/deepmreye/jobs".format(
                 main_dir=main_dir,project_dir=project_dir), exist_ok=True)

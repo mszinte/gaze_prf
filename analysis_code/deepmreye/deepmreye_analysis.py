@@ -80,7 +80,7 @@ with open('settings.json') as f:
     settings = json.loads(json_s)
 
 subjects = settings['subjects']
-gaze_tasks = settings['gaze_tasks']
+gaze_tasks = [f"{sys.argv[3]}_"]
 subTRs = settings['subTRs']
 TR = settings['TR']
 num_res_col = settings['num_res_col']
@@ -295,7 +295,7 @@ for gaze_task in gaze_tasks:
                                  or'GazeRight_' in f 
                                  else 0 for f in subject_mask_files])
         second_column = np.zeros_like(values_array)
-        second_column[1:] = np.cumsum(values_array[:-1]) + 1
+        second_column[1:] = np.cumsum(values_array[:-1])
         third_column = np.cumsum(values_array)
         mat_trs = np.column_stack((values_array, second_column, third_column))
 
@@ -317,4 +317,4 @@ for gaze_task in gaze_tasks:
 # Chmod/chgrp
 print(f"Changing files permissions in {sys.argv[1]}/{sys.argv[2]}")
 os.system(f"chmod -Rf 771 {sys.argv[1]}/{sys.argv[2]}")
-os.system(f"chgrp -Rf {sys.argv[3]} {sys.argv[1]}/{sys.argv[2]}")
+os.system(f"chgrp -Rf {sys.argv[4]} {sys.argv[1]}/{sys.argv[2]}")
