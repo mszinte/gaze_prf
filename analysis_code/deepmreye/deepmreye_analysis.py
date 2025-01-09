@@ -33,6 +33,7 @@ import glob
 import warnings
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 import plotly.express as px
 
 # DeepMReye imports
@@ -111,9 +112,9 @@ opts['load_pretrained'] = model_file
 opts["train_test_split"] = settings['train_test_split']
 
 # Define environment cuda
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' # stop warning
-os.environ["CUDA_VISIBLE_DEVICES"] = ""  # Change to os.environ["CUDA_VISIBLE_DEVICES"] = "" if you dont have access to a GPU
-
+os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"  # Change to os.environ["CUDA_VISIBLE_DEVICES"] = "" if you dont have access to a GPU
 
 # Preload masks to save time within subject loop
 (eyemask_small, eyemask_big, dme_template, mask, x_edges, y_edges, z_edges) = preprocess.get_masks()
@@ -246,7 +247,7 @@ for gaze_task in gaze_tasks:
             (model, model_inference) = train.train_model(dataset=dataset_name, 
                                                          generators=generators, 
                                                          opts=opts, 
-                                                         use_multiprocessing=False,
+                                                         use_multiprocessing=True,
                                                          return_untrained=False, 
                                                          verbose=1, 
                                                          save=False, 
