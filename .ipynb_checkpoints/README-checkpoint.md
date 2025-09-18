@@ -58,6 +58,13 @@ or displaced to the left or to the right.<br/>
 * Draw decoding reference frame index: [_decode_ref_index_plot.ipynb_](analysis_code/decode/decode_ref_index_plot.ipynb)<br/>
 * Compute decoding statistics [_Central_stats_decoding.ipynb.ipynb_](analysis_code/decode/Central\stats\decoding.ipynb)<br/>
 * Statistics for manuscript [_manuscript_stats.ipynb_](analysis_code/manuscript/manuscript_stats.ipynb)<br/>
+* DeepMReye analysis [_deepmreye_gpu_sbatch.py_](analysis_code/deepmreye/deepmreye_gpu_sbatch.py)<br/>
+* Statistics for DeepMReye [_eye_analysis.ipynb_](analysis_code/deepmreye/eye_analysis.ipynb)<br/>
+
+_Optional:_
+* Compute GLM in link with gainfield results [_get_gainfield_betas.py_](analysis_code/glm/get_gainfield_betas.py)<br/>
+* Draw pycortex flatmap of gainfield results [_pycortex.ipynb_](analysis_code/glm/pycortex.ipynb)<br/>
+* Draw GLM with gainfiled results comparison [_glmcmp_plots.ipynb_](analysis_code/glm/glmcmp_plots.ipynb)<br/>
 
 #### Figures
 
